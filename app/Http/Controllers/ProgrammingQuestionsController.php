@@ -121,4 +121,17 @@ class ProgrammingQuestionsController extends Controller
         ProgrammingQuestions::where(['id'=>$question_id])->delete();
         return response()->json(['message' => 'Question deleted successfully', 'success' =>true], 200);
     }
+
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function fetch_question(Request $request){
+        $categoryIds = $request->input('category_ids');
+        $questions = ProgrammingQuestions::select('id','question_text', 'programming_cat_id')->whereIn('programming_cat_id', $categoryIds)->get();
+        return response()->json(['data' => $questions,'success'=> true ]);
+    }
+    
 }

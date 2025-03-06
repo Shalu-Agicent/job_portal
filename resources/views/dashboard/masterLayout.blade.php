@@ -370,8 +370,8 @@
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
                                     <li><a href="{{ route('program-category.index')}}" data-key="t-programming-category">Programming Category</a></li>
-                                    <li><a href="{{ route('programmng-question.index')}}" data-key="t-programming-question">Programming Question</a></li>
-                                  
+                                    <li><a href="{{ route('programming-question.index')}}" data-key="t-programming-question">Programming Question</a></li>
+                                    <li><a href="{{ route('programming-sets.index')}}" data-key="t-programming-sets">Programming Sets</a></li>
                                 </ul>
                             </li>
 

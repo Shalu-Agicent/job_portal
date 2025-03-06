@@ -5,7 +5,7 @@ editOnLoad();
  * 
  */
 $(document).ready(function() {
-    ['#category_ids', '#mcqs_questions', '#edit_category_ids', '#edit_mcqs_questions'].forEach(function(selector) {
+    ['#category_ids',  '#edit_category_ids'].forEach(function(selector) {
         $(selector).select2({
             placeholder: selector.includes('category') ? "Select Categories" : "Select Questions", 
             allowClear: true  
@@ -18,31 +18,69 @@ $(document).ready(function() {
  * 
  * @param {*} selectElement 
  */
-function getQuestion(selectElement) {
-    $('#mcqs_questions').html(`<option value="">select</option>`);
-    const category_ids = $(selectElement).val();
-    if (category_ids && category_ids.length > 0) {
+
+let previousSelectedValues = [];
+function getQuestion(selectElement) {   
+    
+    const selectedOptions = Array.from(selectElement.selectedOptions).map(option => option.value);
+    const addedValues = selectedOptions.filter(value => !previousSelectedValues.includes(value));
+    const removedValues = previousSelectedValues.filter(value => !selectedOptions.includes(value));
+    previousSelectedValues = selectedOptions;
+
+    var added_value = addedValues[0] !== undefined ? addedValues[0] : 0;
+    var removed_value = removedValues[0] !== undefined ? removedValues[0] : 0;
+
+ 
+    if (added_value > 0) {
         $.ajax({
             url: base_url + '/mcqs-question', 
             method: 'GET',
-            data: { category_ids: category_ids }, 
+            data: { category_ids: addedValues }, 
             success: function(response) {
-                let output = `<option value="">select</option>`;
-                if (response.data && response.data.length > 0) {
-                    response.data.forEach(function(question) {
-                        output += `<option value="${question.id}">${question.question_text}</option>`;
+                if (response.success && response.data.length > 0) {
+                    let questionsHtml = ``;
+                    
+                    response.data.forEach(question => {
+                    questionsHtml += `
+                        <div class="row mb-3 category_${question.mcq_category_id}">
+                            <div class="col-lg-12">      
+                                <input type="checkbox" class="me-2 question-checkbox" name="selected_questions[]" value="${question.id}">                       
+                                <span>${question.question_text}</span>
+                            </div>
+                        </div>`;
                     });
-                } else {               
-                    output += `<option value="">No questions available</option>`;
-                }                
-                $('#mcqs_questions').html(output);
+
+                    $('#question_div').append(questionsHtml);
+
+                    // Attach event listener for "Select All"
+                    $('#select_all').on('change', function() {
+                        $('.question-checkbox').prop('checked', this.checked);
+                    });
+
+                    // Uncheck "Select All" if any checkbox is manually unchecked
+                    $('.question-checkbox').on('change', function() {
+                        if (!$('.question-checkbox:checked').length) {
+                            $('#select_all').prop('checked', false);
+                        } else if ($('.question-checkbox:checked').length === $('.question-checkbox').length) {
+                            $('#select_all').prop('checked', true);
+                        }
+                    });
+
+                } else {
+                    $('#question_div').html(`<p class="text-danger">No questions found for the selected category.</p>`);
+                }
             },
             error: function(error) {
                 updateToastBackground("bg-danger", 'Error fetching questions');
             }
         });
+    } else if (removedValues.length > 0) {
+        // Ensure we are only removing specific rows related to this category
+        $(`.category_${removed_value}`).each(function () {
+            $(this).remove();
+        });
     } else {
-        $('#mcqs_questions').html(`<option value="">select</option>`);
+        $('#question_div').html(`<p class="text-warning">Please select a category.</p>`);
     }
 }
 
@@ -66,15 +104,21 @@ function updateToastBackground(addClassName, addMessage){
 }
 
 /**
- * 
+ * for save action
  */
 $('#mcqs_sets_create_form').submit(function (e) { 
     e.preventDefault();          
     let formData = new FormData();
-    
+
+    let selectedValues = [];
+    document.querySelectorAll('.question-checkbox:checked').forEach((checkbox) => {
+        selectedValues.push(checkbox.value);
+    });
+
     formData.append('set_title', $('#set_title').val());
     formData.append('category_ids', $('#category_ids').val());
-    formData.append('mcqs_questions', $('#mcqs_questions').val());
+    formData.append('mcqs_questions', selectedValues);
+    
     $.ajax({
         type: "POST",
         url: base_url + "/mcqs-sets",
@@ -118,71 +162,127 @@ function handleValidationErrors(errors) {
 }
 
 /**
- * 
- * @param {*} selectElement 
+ * for edit page select question
  */
-function getEditQuestion(selectElement) {
-   $('#edit_mcqs_questions').html(``);
+let editPreviousSelectedValues = [];
+function getEditQuestion(selectElement) {   
     
-    const category_ids = $(selectElement).val();
-    if (category_ids && category_ids.length > 0) {
+    const selectedOptions = Array.from(selectElement.selectedOptions).map(option => option.value);
+    const addedValues = selectedOptions.filter(value => !editPreviousSelectedValues.includes(value));
+    const removedValues = editPreviousSelectedValues.filter(value => !selectedOptions.includes(value));
+    editPreviousSelectedValues = selectedOptions;
+
+    var added_value = addedValues[0] !== undefined ? addedValues[0] : 0;
+    var removed_value = removedValues[0] !== undefined ? removedValues[0] : 0;
+
+ 
+    if (added_value > 0) {
         $.ajax({
             url: base_url + '/mcqs-question', 
             method: 'GET',
-            data: { category_ids: category_ids }, 
+            data: { category_ids: addedValues }, 
             success: function(response) {
-                let output = `<option value="">select</option>`;
-                if (response.data && response.data.length > 0) {
-                    response.data.forEach(function(question) {
-                        output += `<option value="${question.id}">${question.question_text}</option>`;
+                if (response.success && response.data.length > 0) {
+                    let questionsHtml = ``;
+                    
+                    response.data.forEach(question => {
+                    questionsHtml += `
+                        <div class="row mb-3 category_${question.mcq_category_id}">
+                            <div class="col-lg-12">      
+                                <input type="checkbox" class="me-2 edit-question-checkbox" id="edit_mcqs_questions" name="selected_questions[]" value="${question.id}">                       
+                                <span>${question.question_text}</span>
+                            </div>
+                        </div>`;
                     });
-                } else {               
-                    output += `<option value="">No questions available</option>`;
-                }                
-                $('#edit_mcqs_questions').html(output);
+
+                    $('#edit_question_div').append(questionsHtml);
+
+                    // Attach event listener for "Select All"
+                    $('#select_all').on('change', function() {
+                        $('.edit-question-checkbox').prop('checked', this.checked);
+                    });
+
+                    // Uncheck "Select All" if any checkbox is manually unchecked
+                    $('.edit-question-checkbox').on('change', function() {
+                        if (!$('.edit-question-checkbox:checked').length) {
+                            $('#select_all').prop('checked', false);
+                        } else if ($('.edit-question-checkbox:checked').length === $('.edit-question-checkbox').length) {
+                            $('#select_all').prop('checked', true);
+                        }
+                    });
+
+                } else {
+                    $('#edit_question_div').html(`<p class="text-danger">No questions found for the selected category.</p>`);
+                }
             },
             error: function(error) {
                 updateToastBackground("bg-danger", 'Error fetching questions');
             }
         });
+    } else if (removedValues.length > 0) {
+        // Ensure we are only removing specific rows related to this category
+        $(`.category_${removed_value}`).each(function () {
+            $(this).remove();
+        });
     } else {
-        $('#mcqs_questions').html(`<option value="">select</option>`);
+        $('#question_div').html(`<p class="text-warning">Please select a category.</p>`);
     }
 }
 
 /**
- * 
+ * edit page on load select qduestion
  */
 function editOnLoad(){
-    let oldQuestion = $('#old_question').val(); // response: "19,20,21,30,37"
-    console.log(oldQuestion); // Verify the old question IDs
 
-    // Clear previous options in the #edit_mcqs_questions dropdown
-    $('#edit_mcqs_questions').html(`<option value="">select</option>`);
-
-    const category_ids = $('#edit_category_ids').val(); // Assuming this selects category IDs
-    if (category_ids && category_ids.length > 0) {
+    var old_question = $('#old_question').val();   
+    const set_id = $('#set_id').val();
+    if (set_id && set_id.length > 0) {
         $.ajax({
-            url: base_url + '/mcqs-question', 
+            url: base_url + '/set-mcqs-question', 
             method: 'GET',
-            data: { category_ids: category_ids }, 
+            data: { set_id: set_id }, 
             success: function(response) {
-                let output = `<option value="">select</option>`;
-                let selectedQuestions = oldQuestion.split(','); // Convert the comma-separated string to an array
-
-                if (response.data && response.data.length > 0) {
-                    response.data.forEach(function(question) {
-                        // Check if the current question ID is in the selectedQuestions array
-                        let selected = selectedQuestions.includes(String(question.id)) ? 'selected' : '';
-
-                        output += `<option value="${question.id}" ${selected}>${question.question_text}</option>`;
+                if (response.success && response.data.length > 0) {
+                    let questionsHtml = ``;
+                    let oldQuestions = $('#old_question').val().split(','); // Convert string to array
+                
+                    response.data.forEach(question => {
+                        let isChecked = oldQuestions.includes(question.id.toString()) ? 'checked' : ''; // Check if ID exists in oldQuestions
+                        
+                        questionsHtml += `
+                            <div class="row mb-3 category_${question.mcq_category_id}">
+                                <div class="col-lg-12">      
+                                    <input type="checkbox" class="me-2 edit-question-checkbox" name="selected_questions[]" value="${question.id}" ${isChecked}>                       
+                                    <span>${question.question_text}</span>
+                                </div>
+                            </div>`;
                     });
-                } else {               
-                    output += `<option value="">No questions available</option>`;
+                
+                    $('#edit_question_div').append(questionsHtml);
+                
+                    // Attach event listener for "Select All"
+                    $('#edit_select_all').on('change', function() {
+                        $('.edit-question-checkbox').prop('checked', this.checked);
+                    });
+                
+                    // Uncheck "Select All" if any checkbox is manually unchecked
+                    $('.edit-question-checkbox').on('change', function() {
+                        if (!$('.edit-question-checkbox:checked').length) {
+                            $('#edit_select_all').prop('checked', false);
+                        } else if ($('.edit-question-checkbox:checked').length === $('.edit-question-checkbox').length) {
+                            $('#edit_select_all').prop('checked', true);
+                        }
+                    });
+                
+                    // If all checkboxes are already checked, check the "Select All" checkbox
+                    if ($('.edit-question-checkbox:checked').length === $('.edit-question-checkbox').length) {
+                        $('#edit_select_all').prop('checked', true);
+                    }
+                
+                } else {
+                    $('#question_div').html(`<p class="text-danger">No questions found for the selected category.</p>`);
                 }
-
-                // Set the options in the dropdown
-                $('#edit_mcqs_questions').html(output);
+                
             },
             error: function(error) {
                 updateToastBackground("bg-danger", 'Error fetching questions');
@@ -198,11 +298,17 @@ function editOnLoad(){
  */
 $('#mcqs_sets_edit_form').submit(function (e) { 
     e.preventDefault();      
+
+    let edit_mcqs_questions = [];
+    document.querySelectorAll('.edit-question-checkbox:checked').forEach((checkbox) => {
+        edit_mcqs_questions.push(checkbox.value);
+    });
+
     var set_id = $('#set_id').val();    
     let formData = new FormData();
     formData.append('set_title', $('#set_title').val());
     formData.append('category_ids', $('#edit_category_ids').val());
-    formData.append('mcqs_questions', $('#edit_mcqs_questions').val());
+    formData.append('mcqs_questions', edit_mcqs_questions);
 
     $.ajax({
         type: "POST",

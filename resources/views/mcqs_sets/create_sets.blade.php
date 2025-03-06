@@ -26,7 +26,7 @@
 
                         <div class="row mb-3">
                             <div class="col-lg-12">                            
-                                <label class="form-label">Question</label>
+                                <label class="form-label">Title</label>
                                 <input type="text" class="form-control" name="set_title" id="set_title" value="{{ old('set_title') }}">
                                 @error('set_title') <span class="text-danger">{{ $message }}</span> @enderror  
                             </div>
@@ -45,16 +45,21 @@
                                 @error('correct_answer') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>
+                        <hr>
 
-                        <div class="row mb-3">
-                            <div class="col-lg-12">                            
-                                <label class="form-label">Select Questions</label>
-                                <select class="form-select" multiple="multiple" id="mcqs_questions" name="mcqs_questions[]">                                   
-                                </select>
-                                @error('correct_answer') <span class="text-danger">{{ $message }}</span> @enderror
+                        <div class="mt-4 mb-4">
+                            <div class="card-title mb-4">
+                                <h5>Selected Category Questions List</h5>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-lg-12">
+                                    <input type="checkbox" id="select_all" class="me-2"> <strong>Select All</strong>
+                                </div>
+                            </div>
+                            <div class="mt-4 mb-4" id="question_div">
                             </div>
                         </div>
-                        
+                                               
                         
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </div>                    

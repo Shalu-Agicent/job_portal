@@ -15,7 +15,7 @@
                     <div class="d-flex">
                         <div class="me-auto"><h4>All Mcqs</h4></div>
                         <div class="">
-                            <a href="{{ route('programmng-question.create') }}" class="btn btn-soft-primary"><i class="bx bxs-plus-square"></i> Create</a>
+                            <a href="{{ route('programming-question.create') }}" class="btn btn-soft-primary"><i class="bx bxs-plus-square"></i> Create</a>
                
                         </div>
                     </div>
@@ -39,11 +39,11 @@
                                     <td>{{ $value->programming_category->category_name }}</td> 
                                     <td class="d-flex align-items-center">
                                        
-                                        <button type="button" data-bs-question_id="{{$value->id}}" class="btn btn-soft-primary me-2" data-bs-toggle="modal" data-bs-target="#mcqView">
+                                        {{-- <button type="button" data-bs-question_id="{{$value->id}}" class="btn btn-soft-primary me-2" data-bs-toggle="modal" data-bs-target="#mcqView">
                                             <i class="bx bx-show"></i>
-                                        </button>
+                                        </button> --}}
                                      
-                                        <a href="{{ route('programmng-question.edit', $value->id) }}" class="btn btn-soft-warning me-2"><i class="bx bx-edit"></i></a>
+                                        <a href="{{ route('programming-question.edit', $value->id) }}" class="btn btn-soft-warning me-2"><i class="bx bx-edit"></i></a>
 
                                         <form class="deleteQuestionForm" method="POST" action="javascript:void(0)">
                                             @csrf 

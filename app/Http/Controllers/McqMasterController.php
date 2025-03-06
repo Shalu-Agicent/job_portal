@@ -269,7 +269,7 @@ class McqMasterController extends Controller
      */
     public function fetch_question(Request $request){
         $categoryIds = $request->input('category_ids');
-        $questions = McqMaster::select('id','question_text')->whereIn('mcq_category_id', $categoryIds)->get();
+        $questions = McqMaster::select('id','question_text', 'mcq_category_id')->whereIn('mcq_category_id', $categoryIds)->get();
         return response()->json(['data' => $questions,'success'=> true ]);
     }
     

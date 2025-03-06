@@ -31,7 +31,7 @@ $('#question_create_form').submit(function (e) {
     
     $.ajax({
         type: "POST",
-        url: base_url + "/programmng-question",
+        url: base_url + "/programming-question",
         data: formData,  
         processData: false,     
         contentType: false, 
@@ -43,7 +43,7 @@ $('#question_create_form').submit(function (e) {
             $('.error-message').remove();
             updateToastBackground("bg-success", response.message);            
             setTimeout(() => {
-                window.location.href = base_url + "/programmng-question";
+                window.location.href = base_url + "/programming-question";
             }, 1200);                        
         },
         error: function (xhr) {
@@ -75,7 +75,7 @@ $('#question_edit_form').submit(function (e) {
     // formData.append('images', $('#formFile')[0].files[0]);
     $.ajax({
         type: "POST",
-        url: base_url + "/programmng-question/"+question_id,
+        url: base_url + "/programming-question/"+question_id,
         data: formData,  
         processData: false,     
         contentType: false, 
@@ -87,7 +87,7 @@ $('#question_edit_form').submit(function (e) {
             $('.error-message').remove();
             updateToastBackground("bg-success", response.message); 
             setTimeout(() => {
-                window.location.href = base_url + "/programmng-question";
+                window.location.href = base_url + "/programming-question";
             }, 1200);                        
         },
         error: function (xhr) {
@@ -125,7 +125,7 @@ $(document).on('click', '.deleteQuestionForm button', function (e) {
         if (result.isConfirmed) {
             var questionId = $(this).data('question-id');
             $.ajax({
-                url: base_url+'/programmng-question/' + questionId, 
+                url: base_url+'/programming-question/' + questionId, 
                 type: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': $("input[name='_token']").val(),
@@ -133,7 +133,7 @@ $(document).on('click', '.deleteQuestionForm button', function (e) {
                 success: function(response) {
                     updateToastBackground("bg-success", response.message);
                     setTimeout(() => {
-                        window.location.href = base_url + "/programmng-question";
+                        window.location.href = base_url + "/programming-question";
                     }, 1200);   
                 },
                 error: function(xhr, status, error) {

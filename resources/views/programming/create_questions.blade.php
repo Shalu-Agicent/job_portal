@@ -16,7 +16,7 @@
                     <div class="d-flex">
                         <div class="me-auto"><h4>Question</h4></div>
                         <div class="">
-                            <a href="{{ route('programmng-question.index') }}" class="btn btn-secondary">Back</a>
+                            <a href="{{ route('programming-question.index') }}" class="btn btn-secondary">Back</a>
                         </div>
                     </div>
                 </div>

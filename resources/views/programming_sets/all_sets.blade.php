@@ -13,9 +13,9 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex">
-                        <div class="me-auto"><h4>All Mcqs Sets</h4></div>
+                        <div class="me-auto"><h4>All Programming Sets</h4></div>
                         <div class="">
-                            <a href="{{ route('mcqs-sets.create') }}" class="btn btn-soft-primary"><i class="bx bxs-plus-square"></i> Create</a>
+                            <a href="{{ route('programming-sets.create') }}" class="btn btn-soft-primary"><i class="bx bxs-plus-square"></i> Create</a>
                         </div>
                     </div>
                 </div>
@@ -35,11 +35,11 @@
                                     <td>{{ $value->set_title }}</td> 
                                     <td class="d-flex align-items-center">
                                        
-                                        <a href="{{ route('mcqs-sets.show', $value->id) }}" class="btn btn-soft-primary me-2"><i class="bx bx-show"></i> </a>
+                                        <a href="{{ route('programming-sets.show', $value->id) }}" class="btn btn-soft-primary me-2"><i class="bx bx-show"></i> </a>
                                      
-                                        <a href="{{ route('mcqs-sets.edit', $value->id) }}" class="btn btn-soft-warning me-2"><i class="bx bx-edit"></i></a>
+                                        <a href="{{ route('programming-sets.edit', $value->id) }}" class="btn btn-soft-warning me-2"><i class="bx bx-edit"></i></a>
 
-                                        <form class="deleteMcqSetForm" method="POST" action="javascript:void(0)">
+                                        <form class="deleteProgrammngSetForm" method="POST" action="javascript:void(0)">
                                             @csrf 
                                             @method('DELETE')
                                             <button type="button" class="btn btn-soft-danger me-2" data-set-id="{{$value->id}}">
@@ -59,5 +59,5 @@
 @endsection
 
 @push('script')
-<script src="{{ url('public') }}/assets/js/custom/sets.js"></script>
+<script src="{{ url('public') }}/assets/js/custom/programming_sets.js"></script>
 @endpush

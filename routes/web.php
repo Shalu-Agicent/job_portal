@@ -8,6 +8,7 @@ use App\Http\Controllers\McqSetsController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProgrammingCategoryController;
 use App\Http\Controllers\ProgrammingQuestionsController;
+use App\Http\Controllers\ProgrammingSetsController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -54,8 +55,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/mcqs-import', [McqMasterController::class, 'import'])->name('mcqs-import');
     Route::get('mcqs-export', [McqMasterController::class, 'export'])->name('mcqs-export');
     Route::get('mcqs-question', [McqMasterController::class, 'fetch_question'])->name('mcqs-question');
-    Route::resource('mcqs-sets',McqSetsController::class);
-    Route::resource('program-category',ProgrammingCategoryController::class);
-    Route::resource('programmng-question',ProgrammingQuestionsController::class);
 
+    Route::get('set-mcqs-question', [McqSetsController::class, 'mcqs_set_question'])->name('set-mcqs-question');
+    Route::resource('mcqs-sets',McqSetsController::class);
+
+    Route::resource('program-category',ProgrammingCategoryController::class);
+    Route::resource('programming-question',ProgrammingQuestionsController::class);
+    Route::get('coding-question', [ProgrammingQuestionsController::class, 'fetch_question'])->name('coding-question');
+    Route::resource('programming-sets',ProgrammingSetsController::class);
 });

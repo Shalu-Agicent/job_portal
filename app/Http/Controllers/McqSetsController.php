@@ -39,7 +39,7 @@ class McqSetsController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {   
+    {       
         // Validation rules
         $validatedData =  Validator::make($request->all(),[
             'set_title' => 'required',
@@ -102,6 +102,7 @@ class McqSetsController extends Controller
         ->select('id', 'category_name')
         ->orderBy('id', 'asc')
         ->get();
+
         if(!empty($data)){
             $data['category_ids'] = explode(',',json_decode($data['category_ids']));                
         }
@@ -149,4 +150,14 @@ class McqSetsController extends Controller
         McqSets::where(['id'=>$id])->delete();
         return response()->json(['message' => 'Set deleted successfully', 'success' =>true], 200);
     }
+
+
+    public function mcqs_set_question(Request $request){
+        $set_id = $request->input('set_id');
+        $data = McqSets::findOrFail($set_id);
+        $categoryIds = explode(',',json_decode($data['category_ids']));  
+        $questions = McqMaster::select('id','question_text', 'mcq_category_id')->whereIn('mcq_category_id', $categoryIds)->get();
+        return response()->json(['data' => $questions,'success'=> true ]);
+    }
+
 }
