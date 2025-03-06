@@ -20,17 +20,20 @@
                         </div>
                     </div>
                 </div>
-                <form id="question_create_form">
+                <form id="question_edit_form">
                     @csrf
                     <div class="card-body p-4">                        
-
+                        <input type="hidden" id="question_id" value="{{ $programming['programming_cat_id']}}">
                         <div class="row mb-3">
                             <div class="col-lg-12">                          
                                 <label class="form-label">Programming Category</label>
                                 <select class="form-select" id="programming_cat_id" name="programming_cat_id">
                                     <option value="">Select</option>
                                     @foreach ($programming_category_list as $cat_items)
-                                        <option value="{{ $cat_items->id }}">{{ $cat_items->category_name }}</option>
+                                        <option value="{{ $cat_items->id }}" 
+                                            @if ($programming['programming_cat_id']==  $cat_items->id)
+                                                selected
+                                            @endif>{{ $cat_items->category_name }}</option>
                                     @endforeach
                                 </select>    
                                 @error('programming_cat_id') <span class="text-danger">{{ $message }}</span> @enderror   
@@ -41,7 +44,7 @@
                         <div class="row mb-3">
                             <div class="col-lg-12">                            
                                 <label class="form-label">Question</label>
-                                <textarea name="question_text" id="ckeditor-classic">{{ old('question_text') }}</textarea>    
+                                <textarea name="question_text" id="ckeditor-classic">{{ $programming['question_text'] }}</textarea>    
                                 @error('question_text') <span class="text-danger">{{ $message }}</span> @enderror                        
                             </div>                    
                         </div>

@@ -19,6 +19,6 @@ class ProgrammingCategory extends Model
 
     public function questions() // use a plural method name for a hasMany relationship
     {
-        return $this->hasMany(ProgrammingQuestions::class, 'programming_cat_id', 'id');
+        return $this->hasMany(ProgrammingQuestions::class, 'programming_cat_id');
     }
 }

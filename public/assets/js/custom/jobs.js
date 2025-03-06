@@ -1,6 +1,4 @@
 let base_url = document.getElementById('app').getAttribute('data-url');
-var toastElement = document.getElementById('borderedToast1');
-
 /**
  * create job form submit
  */

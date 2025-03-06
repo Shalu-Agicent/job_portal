@@ -10,6 +10,6 @@ class ProgrammingQuestions extends Model
     protected $guarded = [];    
 
     public function programming_category(){
-        return $this->belongsTo(ProgrammingCategory::class, 'programming_cat_id', 'id');
+        return $this->belongsTo(ProgrammingCategory::class, 'programming_cat_id','id');
     }
 }
