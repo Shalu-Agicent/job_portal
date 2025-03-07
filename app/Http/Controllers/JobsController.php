@@ -48,30 +48,62 @@ class JobsController extends Controller
      */
     public function store(Request $request)
     {      
-        // Validation rules
-        $validatedData =  Validator::make($request->all(),[
-            'title' => 'required|string',
-            'employment_type' => 'required|in:Full-time,Part-time,Contract',
+       
+        $validatedData = Validator::make($request->all(), [
+            'title' => 'required',
+            'employment_type' => 'required',
             'location' => 'required',
             'status' => 'required|in:Open,Closed',
             'posted_at' => 'required|date',
-            'salary_range' => 'required',
+            'min_salary' => 'required|numeric|min:0',
+            'max_salary' => 'required|numeric|min:0|gte:min_salary',
             'description' => 'required',
-            'assessment' => 'required',
+            'assessment' => 'required|in:Yes,No',
+            'work_mode' => 'required',
+            'experience' => 'required|integer|min:0',
+            'role' => 'required',
+            'skills' => 'required|array',
+            'skills.*' => 'string', 
         ], [
             'title.required' => 'The job title is required.',
-            'title.string' => 'The job title must be a valid string.',        
+        
             'employment_type.required' => 'Please select an employment type.',
-            'employment_type.in' => 'The employment type must be one of the following: Full-time, Part-time, or Contract.',
-            'location.required' => 'Please specify the location of the job.',
+        
+            'location.required' => 'The job location is required.',
+        
             'status.required' => 'Please select the job status.',
-            'status.in' => 'The status must be either Open or Closed.',            
-            'posted_at.required' => 'Please provide the date when the job was posted.',
-            'posted_at.date' => 'The posting date must be a valid date.',            
-            'salary_range.required' => 'Please specify the salary range.',            
+            'status.in' => 'The status must be either Open or Closed.',
+        
+            'posted_at.required' => 'The posting date is required.',
+            'posted_at.date' => 'The posting date must be a valid date.',
+        
+            'min_salary.required' => 'Please enter the minimum salary.',
+            'min_salary.numeric' => 'The minimum salary must be a number.',
+            'min_salary.min' => 'The minimum salary cannot be negative.',
+        
+            'max_salary.required' => 'Please enter the maximum salary.',
+            'max_salary.numeric' => 'The maximum salary must be a number.',
+            'max_salary.min' => 'The maximum salary cannot be negative.',
+            'max_salary.gte' => 'The maximum salary must be greater than or equal to the minimum salary.',
+        
             'description.required' => 'The job description is required.',
-            'assessment.required' => 'Please select an assessment.',
+        
+            'assessment.required' => 'Please select an assessment option.',
+            'assessment.in' => 'Please choose one.',
+        
+            'work_mode.required' => 'Please select a work mode.',
+        
+            'experience.required' => 'Experience is required.',
+            'experience.integer' => 'Experience must be a valid number.',
+            'experience.min' => 'Experience cannot be negative.',
+        
+            'role.required' => 'Please specify the job role.',
+        
+            'skills.required' => 'Please add at least one skill.',
+            'skills.array' => 'Skills must be an array.',
+            'skills.*.string' => 'Each skill must be a valid string.',
         ]);
+        
 
         if($validatedData->fails()){           
             return response()->json([
@@ -80,8 +112,8 @@ class JobsController extends Controller
                 'errors' => $validatedData->errors()  
             ], 422);  
         }    
-
-        Jobs::create([
+       
+        $job  = Jobs::create([
             'title' => $request->input('title'),
             'employment_type' => $request->input('employment_type'),
             'location' => $request->input('location'),
@@ -91,9 +123,16 @@ class JobsController extends Controller
             'salary_range' => $request->input('salary_range'),
             'description' => $request->input('description'),
             'requirements' => $request->input('requirements'),
-            'assessment' => $request->input('assessment'),
+            'role' => $request->input('role'),
+            'work_mode' => $request->input('work_mode'),
+            'experience' => $request->input('experience'),
+            'min_salary' => $request->input('min_salary'),
+            'max_salary' => $request->input('max_salary'),
+            'skills' => $request->input('skills')
         ]);
-        return response()->json(['message' => 'Job posted successfully','success' =>true]);
+        
+        $insertedId = $job->id; 
+        return response()->json(['message' => 'Job created successfully', 'job_id' => $insertedId,'success' =>true]);
     }
 
     /**
@@ -291,4 +330,9 @@ class JobsController extends Controller
     }
     
 
+    public function add_job_assessment(String $job_id){
+        $menu_title = "Jobs Management";
+        $breadcrumb_title = "Job Assessment";
+        return view('jobs.job_assessment',compact('menu_title','breadcrumb_title','job_id'));
+    }
 }

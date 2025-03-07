@@ -26,16 +26,76 @@
          <link href="{{ url('public') }}/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
         <!-- Responsive datatable examples -->
         <link href="{{ url('public') }}/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" /> 
-
         <script src="{{ url('public') }}/assets/libs/jquery/jquery.min.js"></script>
         <!-- Load Select2 CSS -->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-
+        <link href="{{ url('public') }}/assets/css/select2.min.css" rel="stylesheet" />
         <!-- Load Select2 JS -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+        <script src="{{ url('public') }}/assets/js/pages/select2.min.js"></script>
+        <link rel="stylesheet" href="{{ url('public') }}/assets/css/bootstrap-tagsinput.css">
        
     </head>
+    <style>
+       .bootstrap-tagsinput .tag {
+            border-radius: 18px;
+            margin-right: 2px;
+            color: #f8f9fa;
+            background-color: #5156be;
+            border-color: #5156be;
+            gap: 8px;
+            font-weight: 400;
+            padding: 2px 10px 4px 12px;
+        }
+        .bootstrap-tagsinput {
+            background-color: #fffbfb;
+            border: 1px solid #ccc;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            display: inline-block;
+            padding: 9px 6px;
+            color: #555;
+            vertical-align: middle;
+            border-radius: 4px;
+            max-width: 100%;
+            line-height: 22px;
+            cursor: text;
+        }
+        .bootstrap-tagsinput .tag.label.label-info {
+            margin: 5px;  /* Adjust as needed */
+        }
 
+        .bootstrap-tagsinput {
+            width: 100% !important; /* Adjust width as needed */
+        }
+        .tag span[data-role="remove"]::before {
+            content: " | ";  /* Adds the separator */
+            color: rgb(239, 232, 232);    /* Adjust color if needed */
+            margin-right: 5px; /* Add spacing */
+        }
+
+        .bootstrap-tagsinput {
+            display: flex; /* Use flexbox for proper alignment */
+            flex-wrap: wrap; /* Allow tags to wrap to the next line */
+            gap: 5px; /* Add space between tags */
+            padding: 5px; /* Add some padding inside the container */
+            border: 1px solid #ccc; /* Optional: Add border like input */
+            min-height: 40px; /* Ensure minimum height */
+        }
+
+        .bootstrap-tagsinput .tag.label.label-info {
+            display: inline-flex; /* Ensure tags are inline and properly sized */
+            align-items: center; /* Vertically center text */
+            padding: 5px 10px; /* Add padding inside tags */
+            margin: 2px; /* Add space between tags */
+            word-break: break-word; /* Prevent overflow issues */
+        }
+
+        .bootstrap-tagsinput input {
+            border: none; /* Remove border from input */
+            outline: none; /* Remove focus outline */
+            flex-grow: 1; /* Make input expand to fill space */
+            min-width: 100px; /* Ensure minimum width */
+        }
+
+    </style>
     <body>
 
     <!-- <body data-layout="horizontal"> -->
@@ -791,8 +851,14 @@
         <script src="{{ url('public') }}/assets/js/pages/datatables.init.js"></script> 
         <!-- Sweet Alerts js -->
         <script src="{{ url('public') }}/assets/libs/sweetalert2/sweetalert2.min.js"></script>
-     
- 
+        <!-- twitter-bootstrap-wizard js -->
+        <script src="{{ url('public') }}/assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+        <script src="{{ url('public') }}/assets/libs/twitter-bootstrap-wizard/prettify.js"></script>
+        <!-- form wizard init -->
+        <script src="{{ url('public') }}/assets/js/pages/form-wizard.init.js"></script>
+        <!-- Bootstrap Tags Input -->
+        <script src="{{ url('public') }}/assets/js/pages/bootstrap-tagsinput.min.js"></script>
+
         @stack('script');      
         @if(session('success')||session('error'))
             <script>

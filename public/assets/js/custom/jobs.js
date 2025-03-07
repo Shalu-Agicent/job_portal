@@ -4,18 +4,24 @@ let base_url = document.getElementById('app').getAttribute('data-url');
  */
 $('#job_create_form').submit(function (e) { 
     e.preventDefault();          
-    let formData = new FormData();
     
+    let formData = new FormData();  
+
+    var assessment = $("input[name='assessment']:checked").val();
+    var skills = $("#tag-input").val();
     formData.append('title', $('#title').val());
     formData.append('employment_type', $('#employment_type').val());
     formData.append('location', $('#location').val());
     formData.append('status', $('#job_status').val());
-    formData.append('posted_at', $('#posted_at').val());
-    formData.append('assessment', $('#assessment').val());
-    formData.append('salary_range', $('#salary_range').val());
+    formData.append('assessment', assessment);
+    formData.append('min_salary', $('#min_salary').val());
+    formData.append('max_salary', $('#max_salary').val());
+    formData.append('role', $('#role').val());
+    formData.append('work_mode', $('#work_mode').val());
+    formData.append('experience', $('#experience').val());
+    formData.append('skills', skills); 
     formData.append('description', $('#ckeditor-classic').val());
-    formData.append('requirements', $('#ckeditor-classic-other').val());
-
+   
     // formData.append('images', $('#formFile')[0].files[0]);
     $.ajax({
         type: "POST",
@@ -30,10 +36,18 @@ $('#job_create_form').submit(function (e) {
             $('#job_create_form')[0].reset(); 
             $('.error-message').remove();
             updateToastBackground("bg-success", response.message);
-            
-            setTimeout(() => {
-                window.location.href = base_url + "/jobs";
-            }, 1200);                        
+            let jobId = response.job_id; // Get job ID
+            if(assessment==='Yes'){
+                setTimeout(() => {
+                    window.location.href = base_url + "/jobs/add-assessment/" + jobId;
+                }, 1200);
+               
+            }else{
+                setTimeout(() => {
+                    window.location.href = base_url + "/jobs";
+                }, 1200);
+            }
+                                    
         },
         error: function (xhr) {
             $('.error-message').remove(); 

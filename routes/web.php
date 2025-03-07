@@ -45,12 +45,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/update-company-info',[EmployerController::class,'update_company_info'])->name('update-company-info');
 
     Route::resource('jobs',JobsController::class);
+    Route::get('/jobs/add-assessment/{id}',[JobsController::class,'add_job_assessment'])->name('add-assessment');
     Route::get('/jobs/applicant/{id}',[JobsController::class,'applicant'])->name('applicant');
     Route::get('/get-applicant/{id}',[JobsController::class,'get_applicant'])->name('get-applicant');
     Route::get('/subscriptions',[JobsController::class,'subscriptions'])->name('subscriptions');
     Route::get('/buy-subscription/{id}',[JobsController::class,'buy_subscription'])->name('buy-subscription');
-    Route::resource('mcqs-category',McqCategoryController::class);
 
+    Route::resource('mcqs-category',McqCategoryController::class);
     Route::resource('mcqs',McqMasterController::class);    
     Route::post('/mcqs-import', [McqMasterController::class, 'import'])->name('mcqs-import');
     Route::get('mcqs-export', [McqMasterController::class, 'export'])->name('mcqs-export');
@@ -62,5 +63,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('program-category',ProgrammingCategoryController::class);
     Route::resource('programming-question',ProgrammingQuestionsController::class);
     Route::get('coding-question', [ProgrammingQuestionsController::class, 'fetch_question'])->name('coding-question');
+    
     Route::resource('programming-sets',ProgrammingSetsController::class);
+    Route::get('set-progrmming-question', [ProgrammingSetsController::class, 'set_programming_question'])->name('set-progrmming-question');
 });
